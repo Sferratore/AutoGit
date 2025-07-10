@@ -6,7 +6,7 @@ load_dotenv()
 
 REPO_PATH = os.getenv("AUTOGIT_REPO_PATH")
 COMMIT_MESSAGE = os.getenv("GIT_COMMIT_MESSAGE", "auto: updated readme")
-README_PATH = os.path.join(REPO_PATH, "README.md")
+README_PATH = REPO_PATH + "/README.md"
 
 def append_to_readme():
     with open(README_PATH, "a") as f:
