@@ -23,16 +23,19 @@ def append_to_readme():
     # Read README content
     try:
         with open(README_PATH, "r") as f:
-            content = f.read()
+            content = f.read().strip()
     except FileNotFoundError:
         content = ""
 
-    # Add "I" in a new row
-    content += "I"
+    # Add "I" next to the previous character with a space if needed
+    if content:
+        content += " I"
+    else:
+        content = "I"
 
-    # Substitute IIII with V inside the document
-    while "IIIII" in content:
-        content = content.replace("IIII", "V")
+    # Substitute every occurrence of "I I I I" with "V"
+    while "I I I I I" in content:
+        content = content.replace("I I I I", "V")
 
     # Write README with updated content
     with open(README_PATH, "w") as f:
