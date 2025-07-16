@@ -75,8 +75,9 @@ def count_commits():
     return total_commits_today
 
 if __name__ == "__main__":
-    append_to_readme()
     if(count_commits() < 4):
+        append_to_readme()
         for i in range(7):
             commit()
-    safe_push()
+        safe_push()
+
