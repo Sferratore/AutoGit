@@ -1,6 +1,8 @@
 import os
 import subprocess
+import requests
 from dotenv import load_dotenv
+from datetime import datetime, timezone
 
 load_dotenv()
 
@@ -54,7 +56,27 @@ def commit():
 def safe_push():
     subprocess.run(['git', 'push', REMOTE_URL, 'HEAD:master'], cwd=REPO_PATH, shell=True, check=True)
 
+def count_commits():
+    url = f"https://api.github.com/users/{GITHUB_USERNAME}/events"
+    headers = {"Authorization": f"token {TOKEN}"}
+
+    response = requests.get(url, headers=headers)
+    events = response.json()
+
+    today = datetime.now(timezone.utc).date()
+
+    total_commits_today = 0
+
+    for event in events:
+        if event["type"] == "PushEvent":
+            created_at = datetime.fromisoformat(event["created_at"].replace("Z", "+00:00")).date()
+            if created_at == today:
+                total_commits_today += len(event["payload"]["commits"])
+    return total_commits_today
+
 if __name__ == "__main__":
     append_to_readme()
-    commit()
+    if(count_commits() < 4):
+        for i in range(7):
+            commit()
     safe_push()

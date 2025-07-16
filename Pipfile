@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 GitPython = "*"
 python-dotenv = "*"
+requests = "*"
 
 [dev-packages]
 
