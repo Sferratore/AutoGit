@@ -57,27 +57,26 @@ def safe_push():
     subprocess.run(['git', 'push', REMOTE_URL, 'HEAD:master'], cwd=REPO_PATH, shell=True, check=True)
 
 def count_commits():
-    url = f"https://api.github.com/users/{GITHUB_USERNAME}/events"
-    headers = {"Authorization": f"token {TOKEN}"}
+    today = datetime.today().strftime('%Y-%m-%d')
+
+    url = f"https://api.github.com/search/commits?q=author:{GITHUB_USERNAME}+author-date:>={today}"
+
+    headers = {
+        "Accept": "application/vnd.github.cloak-preview",
+        "Authorization": f"token {TOKEN}"
+    }
 
     response = requests.get(url, headers=headers)
-    events = response.json()
+    response.raise_for_status()
 
-    today = datetime.now(timezone.utc).date()
-
-    total_commits_today = 0
-
-    for event in events:
-        if event["type"] == "PushEvent":
-            created_at = datetime.fromisoformat(event["created_at"].replace("Z", "+00:00")).date()
-            if created_at == today:
-                total_commits_today += len(event["payload"]["commits"])
+    data = response.json()
+    total_commits_today = data['total_count']
     return total_commits_today
 
 if __name__ == "__main__":
     if(count_commits() < 4):
-        append_to_readme()
         for i in range(7):
+            append_to_readme()
             commit()
-        safe_push()
+            safe_push()
 
