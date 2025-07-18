@@ -3,6 +3,7 @@ import subprocess
 import requests
 from dotenv import load_dotenv
 from datetime import datetime, timezone
+import random
 
 load_dotenv()
 
@@ -74,8 +75,9 @@ def count_commits():
     return total_commits_today
 
 if __name__ == "__main__":
+    num_commits = random.randint(5, 11)
     if(count_commits() < 4):
-        for i in range(7):
+        for i in range(num_commits):
             append_to_readme()
             commit()
             safe_push()
