@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timezone
 import random
 
-load_dotenv()
+load_dotenv(override=True)
 
 REPO_PATH = os.getenv("AUTOGIT_REPO_PATH")
 COMMIT_MESSAGE = os.getenv("GIT_COMMIT_MESSAGE", "auto: updated commithist")
