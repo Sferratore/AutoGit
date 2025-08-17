@@ -9,7 +9,7 @@ load_dotenv(override=True)
 
 REPO_PATH = os.getenv("AUTOGIT_REPO_PATH")
 COMMIT_MESSAGE = os.getenv("GIT_COMMIT_MESSAGE", "auto: updated commithist")
-COMMITHIST_PATH = REPO_PATH + "/COMMITHIST.md"
+COMMITHIST_PATH = os.path.join(REPO_PATH, "COMMITHIST.md")  # MOD
 TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 
@@ -23,31 +23,26 @@ def ensure_https_remote():
         subprocess.run(['git', 'remote', 'set-url', 'origin', REMOTE_URL], cwd=REPO_PATH, check=True)
 
 def append_to_commithist():
-    # Read COOMMITHIST content
     try:
         with open(COMMITHIST_PATH, "r") as f:
             content = f.read().strip()
     except FileNotFoundError:
         content = ""
 
-    # Add "I" next to the previous character with a space if needed
     if content:
         content += " I"
     else:
         content = "I"
 
-    # Substitute every occurrence of "I I I I" with "V"
     while "I I I I I" in content:
         content = content.replace("I I I I", "V")
 
-    # Write COMMITHIST with updated content
     with open(COMMITHIST_PATH, "w") as f:
         f.write(content + "\n")
 
 def commit():
     ensure_https_remote()
     subprocess.run(['git', 'add', 'COMMITHIST.md'], cwd=REPO_PATH, check=True)
-    # Commit solo se ci sono modifiche
     result = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=REPO_PATH)
     if result.returncode != 0:
         subprocess.run(['git', 'commit', '-m', COMMIT_MESSAGE], cwd=REPO_PATH, check=True)
@@ -55,7 +50,7 @@ def commit():
         print("Nessuna modifica da committare.")
 
 def safe_push():
-    subprocess.run(['git', 'push', REMOTE_URL, 'HEAD:master'], cwd=REPO_PATH, shell=True, check=True)
+    subprocess.run(['git', 'push', REMOTE_URL, 'HEAD:master'], cwd=REPO_PATH, check=True)  # MOD
 
 def count_commits():
     today = datetime.today().strftime('%Y-%m-%d')
@@ -81,4 +76,3 @@ if __name__ == "__main__":
             append_to_commithist()
             commit()
             safe_push()
-
