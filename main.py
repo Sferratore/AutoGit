@@ -43,7 +43,6 @@ def append_to_commithist():
 def commit():
     ensure_https_remote()
     subprocess.run(['git', 'add', 'COMMITHIST.md'], cwd=REPO_PATH, check=True)
-    # Commit solo se ci sono modifiche
     result = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=REPO_PATH)
     if result.returncode != 0:
         subprocess.run(['git', 'commit', '-m', COMMIT_MESSAGE], cwd=REPO_PATH, check=True)
