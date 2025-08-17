@@ -23,24 +23,20 @@ def ensure_https_remote():
         subprocess.run(['git', 'remote', 'set-url', 'origin', REMOTE_URL], cwd=REPO_PATH, check=True)
 
 def append_to_commithist():
-    # Read COOMMITHIST content
     try:
         with open(COMMITHIST_PATH, "r") as f:
             content = f.read().strip()
     except FileNotFoundError:
         content = ""
 
-    # Add "I" next to the previous character with a space if needed
     if content:
         content += " I"
     else:
         content = "I"
 
-    # Substitute every occurrence of "I I I I" with "V"
     while "I I I I I" in content:
         content = content.replace("I I I I", "V")
 
-    # Write COMMITHIST with updated content
     with open(COMMITHIST_PATH, "w") as f:
         f.write(content + "\n")
 
