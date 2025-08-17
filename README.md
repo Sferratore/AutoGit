@@ -49,10 +49,7 @@ GITHUB_USERNAME=your_github_username
 ## ▶️ Execution
 
 ### 5. Local test
-Run the AutoGit batch script to test:
-```bash
-pipenv run python main.py
-```
+Run the AutoGit batch script to test.
 
 ### 6. Schedule for daily operation
 If it works correctly, schedule it to run daily on your PC using:
