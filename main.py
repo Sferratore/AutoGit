@@ -5,11 +5,11 @@ from dotenv import load_dotenv
 from datetime import datetime, timezone
 import random
 
-load_dotenv()
+load_dotenv(override=True)
 
 REPO_PATH = os.getenv("AUTOGIT_REPO_PATH")
-COMMIT_MESSAGE = os.getenv("GIT_COMMIT_MESSAGE", "auto: updated readme")
-README_PATH = REPO_PATH + "/README.md"
+COMMIT_MESSAGE = os.getenv("GIT_COMMIT_MESSAGE", "auto: updated commithist")
+COMMITHIST_PATH = REPO_PATH + "/COMMITHIST.md"
 TOKEN = os.getenv("GITHUB_TOKEN")
 GITHUB_USERNAME = os.getenv("GITHUB_USERNAME")
 
@@ -22,32 +22,27 @@ def ensure_https_remote():
         print("Imposto remote origin su HTTPS con token...")
         subprocess.run(['git', 'remote', 'set-url', 'origin', REMOTE_URL], cwd=REPO_PATH, check=True)
 
-def append_to_readme():
-    # Read README content
+def append_to_commithist():
     try:
-        with open(README_PATH, "r") as f:
+        with open(COMMITHIST_PATH, "r") as f:
             content = f.read().strip()
     except FileNotFoundError:
         content = ""
 
-    # Add "I" next to the previous character with a space if needed
     if content:
         content += " I"
     else:
         content = "I"
 
-    # Substitute every occurrence of "I I I I" with "V"
     while "I I I I I" in content:
         content = content.replace("I I I I", "V")
 
-    # Write README with updated content
-    with open(README_PATH, "w") as f:
+    with open(COMMITHIST_PATH, "w") as f:
         f.write(content + "\n")
 
 def commit():
     ensure_https_remote()
-    subprocess.run(['git', 'add', 'README.md'], cwd=REPO_PATH, check=True)
-    # Commit solo se ci sono modifiche
+    subprocess.run(['git', 'add', 'COMMITHIST.md'], cwd=REPO_PATH, check=True)
     result = subprocess.run(['git', 'diff', '--cached', '--quiet'], cwd=REPO_PATH)
     if result.returncode != 0:
         subprocess.run(['git', 'commit', '-m', COMMIT_MESSAGE], cwd=REPO_PATH, check=True)
@@ -78,7 +73,7 @@ if __name__ == "__main__":
     num_commits = random.randint(5, 11)
     if(count_commits() < 4):
         for i in range(num_commits):
-            append_to_readme()
+            append_to_commithist()
             commit()
             safe_push()
 
