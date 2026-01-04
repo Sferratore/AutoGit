@@ -50,7 +50,22 @@ def commit():
         print("Nessuna modifica da committare.")
 
 def safe_push():
-    subprocess.run(['git', 'push', REMOTE_URL, 'HEAD:master'], cwd=REPO_PATH, shell=True, check=True)
+    try:
+        result = subprocess.run(
+            ["git", "push", "origin", "master"],
+            cwd=REPO_PATH,
+            text=True,
+            capture_output=True,
+            check=True
+        )
+        print(result.stdout)
+
+    except subprocess.CalledProcessError as e:
+        print("❌ Git push failed")
+        print("Exit code:", e.returncode)
+        print("STDOUT:\n", e.stdout)
+        print("STDERR:\n", e.stderr)
+        raise
 
 def count_commits():
     today = datetime.today().strftime('%Y-%m-%d')
