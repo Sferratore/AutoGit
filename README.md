@@ -4,7 +4,7 @@
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### 1. Fork the repository
 Create a fork of this repository on your GitHub account.
@@ -28,7 +28,7 @@ pipenv install
 
 ---
 
-## ⚙️ Configuration
+## Configuration
 
 ### 4. Create the `.env` file
 In the project folder, create a `.env` file with the following content:
@@ -46,7 +46,7 @@ GITHUB_USERNAME=your_github_username
 
 ---
 
-## ▶️ Execution
+## Execution
 
 ### 5. Local test
 Run the AutoGit batch script to test.
